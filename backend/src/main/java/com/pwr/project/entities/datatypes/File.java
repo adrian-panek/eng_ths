@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Entity(name = "File")
+@Entity(name = "files")
 public class File {
 
     @Id

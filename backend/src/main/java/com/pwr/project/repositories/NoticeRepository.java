@@ -14,7 +14,7 @@ public interface NoticeRepository extends JpaRepository<Notice, Long>, JpaSpecif
     List<Notice> findAllByCreatedByAndNoticeStatusIsNot(String createdBy, NoticeStatus noticeStatus);
     List<Notice> findAllByNoticeStatusEquals(NoticeStatus noticeStatus);
 
-    @Query(value = "SELECT public.notice_tags.tags FROM public.notice_tags GROUP BY public.notice_tags.tags ORDER BY COUNT(*) DESC", nativeQuery = true)
+    @Query(value = "SELECT public.notices_tags.tags FROM public.notices_tags GROUP BY public.notices_tags.tags ORDER BY COUNT(*) DESC", nativeQuery = true)
     List<String> populateTags();
 
 }
