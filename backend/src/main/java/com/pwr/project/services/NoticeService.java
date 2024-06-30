@@ -5,14 +5,13 @@ import com.pwr.project.entities.Notice;
 import com.pwr.project.entities.User;
 import com.pwr.project.entities.datatypes.File;
 import com.pwr.project.entities.datatypes.NoticeStatus;
-import com.pwr.project.mappers.NoticeMapper;
 import com.pwr.project.repositories.FileRepository;
 import com.pwr.project.repositories.NoticeRepository;
 import com.pwr.project.repositories.UserRepository;
 
 import jakarta.transaction.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -24,14 +23,20 @@ import java.util.stream.Collectors;
 @Service
 public class NoticeService {
 
-    @Autowired
-    NoticeRepository noticeRepository;
+    private final NoticeRepository noticeRepository;
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private FileRepository fileRepository;
+    private final FileRepository fileRepository;
+
+    private final ModelMapper modelMapper;
+
+    public NoticeService(NoticeRepository noticeRepository, UserRepository userRepository, FileRepository fileRepository, ModelMapper modelMapper) {
+        this.noticeRepository = noticeRepository;
+        this.userRepository = userRepository;
+        this.fileRepository = fileRepository;
+        this.modelMapper = modelMapper;
+    }
 
     @Transactional
     public List<NoticeDTO> getAllNotices(){
@@ -42,7 +47,8 @@ public class NoticeService {
         }
         return notices
                 .stream()
-                .map(NoticeMapper::mapToNoticeDTO)
+//                .map(NoticeMapper::mapToNoticeDTO)
+                .map(notice -> modelMapper.map(notice, NoticeDTO.class))
                 .collect(Collectors.toList());
     }
 
@@ -50,19 +56,19 @@ public class NoticeService {
     public NoticeDTO getNoticeById(Long id){
         Optional<Notice> optionalNotice = noticeRepository.findById(id);
         Notice notice = optionalNotice.get();
-        return NoticeMapper.mapToNoticeDTO(notice);
+        return modelMapper.map(notice, NoticeDTO.class);
     }
 
     @Transactional
     public NoticeDTO createNotice(NoticeDTO noticeDTO) {
         User user = userRepository.findUserByLogin(getCurrentUsername());
         if (!user.getIsSeller()) {
-            throw new SecurityException("Uzytkownik nie jest sprzedajacym!");
+            throw new SecurityException("Current user is not seller!");
         } else {
-            Notice notice = NoticeMapper.mapToNotice(noticeDTO);
+            Notice notice = modelMapper.map(noticeDTO, Notice.class);
             notice.setCreatedBy(getCurrentUsername());
             Notice savedNotice = noticeRepository.save(notice);
-            return NoticeMapper.mapToNoticeDTO(savedNotice);
+            return modelMapper.map(savedNotice, NoticeDTO.class);
         }
     }
 
@@ -78,7 +84,7 @@ public class NoticeService {
                 existingNotice.setSellerNumber(notice.getSellerNumber());
                 existingNotice.setNoticeStatus(notice.getNoticeStatus());
                 Notice updatedNotice = noticeRepository.save(existingNotice);
-                return NoticeMapper.mapToNoticeDTO(updatedNotice);
+                return modelMapper.map(updatedNotice, NoticeDTO.class);
             } else {
                 throw new IllegalAccessException("You dont have right to edit notice with ID: " + notice.getId());
             }
@@ -107,12 +113,11 @@ public class NoticeService {
     }
 
     @Transactional
-    public NoticeDTO addFileToNotice(Long noticeId, File file) {
+    public void addFileToNotice(Long noticeId, File file) {
         Notice notice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new IllegalArgumentException("Notice not found"));
         file.setNotice(notice);
         fileRepository.save(file);
-        return NoticeMapper.mapToNoticeDTO(notice);
     }
 
     @Transactional

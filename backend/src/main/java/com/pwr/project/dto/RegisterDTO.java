@@ -1,6 +1,6 @@
 package com.pwr.project.dto;
 
-public record RegisterDTO (
+public record RegisterDTO(
         String firstname,
         String surname,
         String login,
