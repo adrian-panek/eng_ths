@@ -27,7 +27,7 @@
           <button type="submit" [disabled]="!loginForm.form.valid">Zaloguj się</button>
         </form>
         <div class="register-link">
-          Nie masz jeszcze konta? <a href="/register">Zarejestruj się</a>.
+          Nie masz jeszcze konta? <button (click)="openRegisterScreen()">Zarejestruj się</button>.
         </div>
       </div>
     </div>

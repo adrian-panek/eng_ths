@@ -46,4 +46,8 @@ export class LoginComponent {
     this.toastr.success(message, title);
   }
 
+  openRegisterScreen(): void {
+    this.router.navigate(['/register']);
+  }
+
 }
