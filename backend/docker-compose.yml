@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  backend:
+    image: 'backend-service:latest'
+    build:
+      context: .
+    ports:
+      - "8080:8080"
+    container_name: notices_board_backend
+    depends_on:
+      - db
+  db:
+    image: postgres:16-alpine
+    container_name: notices_board_db
+    environment:
+      - POSTGRES_USER=admin_user
+      - POSTGRES_PASSWORD=Admin123
+      - POSTGRES_DB=notices_board
+  frontend:
+    image: 'frontend-service:latest'
+    build:
+      context: ../frontend
+    ports:
+      - "4200:80"
+    container_name: notices_board_frontend

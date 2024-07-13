@@ -30,7 +30,7 @@ public class Notice {
     private String description;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "notice", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "notice", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Column(nullable = true)
     private Set<File> files = new HashSet<>();
 
