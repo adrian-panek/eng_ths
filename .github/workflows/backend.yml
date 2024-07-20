@@ -41,9 +41,14 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push
-        uses: docker/build-push-action@v6
-        with:
-          push: true
-          tags: adrianpanek/notices-board-backend:latest
-
+#      - name: Build and push
+#        uses: docker/build-push-action@v6
+#
+      - name: show current directory
+        run: pwd
+      - name: list all files
+        run: ls -al
+#        with:
+#          push: true
+#          tags: adrianpanek/notices-board-backend:latest
+#
