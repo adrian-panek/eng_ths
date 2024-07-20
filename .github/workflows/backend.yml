@@ -23,6 +23,7 @@ jobs:
         run: mvn -B package -DskipTests --file backend/pom.xml
 
   docker:
+    needs: maven
     runs-on: ubuntu-latest
     steps:
       - name: Set up QEMU
@@ -40,6 +41,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
+          context: backend
           push: true
           tags: adrianpanek/notices-board-backend:latest
 
