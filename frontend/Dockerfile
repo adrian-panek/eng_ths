@@ -1,7 +1,7 @@
 FROM node:20.15-alpine as build
 WORKDIR /app
 COPY . /app/
-RUN npm install
+RUN npm ci
 RUN npm run build
 
 FROM nginx:1.27.0-alpine

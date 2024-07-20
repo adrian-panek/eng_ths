@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   backend:
     image: 'backend-service:latest'
@@ -10,6 +8,7 @@ services:
     container_name: notices_board_backend
     depends_on:
       - db
+ 
   db:
     image: postgres:16-alpine
     container_name: notices_board_db
@@ -17,6 +16,7 @@ services:
       - POSTGRES_USER=admin_user
       - POSTGRES_PASSWORD=Admin123
       - POSTGRES_DB=notices_board
+
   frontend:
     image: 'frontend-service:latest'
     build:
@@ -24,3 +24,30 @@ services:
     ports:
       - "4200:80"
     container_name: notices_board_frontend
+  
+  prometheus:
+    image: docker.io/prom/prometheus:v2.53.1
+    container_name: monitoring_prometheus
+    ports: 
+      - "9090:9090"
+    command: "--config.file=/etc/prometheus/prometheus.yaml"
+    volumes:
+      - ./config/prometheus.yaml:/etc/prometheus/prometheus.yaml:ro
+      - prometheus-data:/prometheus
+    restart: unless-stopped
+
+  grafana:
+    image: docker.io/grafana/grafana-oss:11.1.0
+    container_name: monitoring_grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    restart: unless-stopped
+
+volumes:
+  prometheus-data:
+    driver: local
+  
+  grafana-data:
+    driver: local

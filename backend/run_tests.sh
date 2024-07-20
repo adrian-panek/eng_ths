@@ -1,5 +1,5 @@
 #!/bin/bash
 
-docker start notices-board-db
+docker start notices_board_db
 mvn surefire:test
-docker stop notices-board-db
+docker stop notices_board_db
