@@ -2,7 +2,7 @@ name: Build Backend
 
 on:
   push:
-    branches: ["main", "ci_test"]
+    branches: ["main"]
 
 jobs:
   maven:
