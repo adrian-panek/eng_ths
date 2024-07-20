@@ -2,7 +2,7 @@ name: Build Frontend
 
 on:
   workflow_run:
-    workflows: ["Build Backend"]
+    workflows: [Build Backend]
     types:
       - completed
 
