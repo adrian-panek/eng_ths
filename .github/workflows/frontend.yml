@@ -11,7 +11,7 @@ jobs:
     defaults:
       run:
         working-directory: ./frontend
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -31,7 +31,7 @@ jobs:
 
   docker:
     needs: nodejs
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
